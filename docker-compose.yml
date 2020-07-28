@@ -1,0 +1,86 @@
+version: "3.0"
+services:
+    #memcached:
+    #    image: memcached:alpine
+    #    container_name: docker-memcached
+
+    redis:
+        image: redis:alpine
+        container_name: docker-redis
+        restart: always
+          
+    redis-commander:
+        image: rediscommander/redis-commander:latest
+        container_name: docker-redis-commander
+        restart: always
+        environment:
+            - REDIS_HOSTS=local:redis:6379
+        ports:
+            - 8081:8081
+
+    nginx:
+        build: ./phpdocker/nginx
+        image: nginx:latest
+        container_name: docker-nginx
+        restart: always
+        volumes:
+            - ./html:/var/www/html
+        depends_on:
+            - php
+        ports:
+            - 80:80
+    #    networks:
+     #       - internal
+
+    php:
+        build: ./phpdocker/php
+        image: php:7.4-fpm
+        container_name: docker-php
+        volumes:
+            - ./html/:/var/www/html/
+        environment:
+            XDEBUG_CONFIG: "remote_host=host.docker.internal remote_enable=1"
+            PHP_IDE_CONFIG: "serverName=Docker"
+        depends_on:
+            - mysql
+   #     networks:
+   #         - internal
+            
+    mysql:
+        image: mysql:latest
+        container_name: docker-mysql
+        restart: always
+        volumes:
+            - ./phpdocker/mysql/data:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+  #      networks:
+  #          - internal
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        container_name: docker-phpmyadmin
+        restart: always
+        environment:
+            PMA_HOST: mysql
+            PMA_PORT: 3306
+            PMA_USER: root
+            PMA_PASSWORD: root
+        ports:
+            - 8080:80
+ #       networks:
+ #           - internal
+
+    mailtrap:
+        image: schickling/mailcatcher:latest
+        container_name: docker-mailtrap
+        ports:
+            - 1025:1025
+            - 1080:1080
+#networks:
+#    internal:
+#        driver: bridge
+#        ipam:
+#            driver: default
+#            config:
+#                - subnet: 192.168.220.0/28
