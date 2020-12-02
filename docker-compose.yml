@@ -3,20 +3,22 @@ services:
     #memcached:
     #    image: memcached:alpine
     #    container_name: docker-memcached
+    #    ports:
+    #        - 11211:11211
 
-    redis:
-        image: redis:alpine
-        container_name: docker-redis
-        restart: always
+    #redis:
+    #    image: redis:alpine
+    #    container_name: docker-redis
+    #    restart: always
           
-    redis-commander:
-        image: rediscommander/redis-commander:latest
-        container_name: docker-redis-commander
-        restart: always
-        environment:
-            - REDIS_HOSTS=local:redis:6379
-        ports:
-            - 8081:8081
+    #redis-commander:
+    #    image: rediscommander/redis-commander:latest
+    #    container_name: docker-redis-commander
+    #    restart: always
+    #    environment:
+    #        - REDIS_HOSTS=local:redis:6379
+    #    ports:
+    #        - 8081:8081
 
     nginx:
         build: ./phpdocker/nginx

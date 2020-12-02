@@ -20,6 +20,9 @@ zlib1g-dev \
 libzip-dev \
 libicu-dev && \
     apt-get -y --no-install-recommends install --fix-missing apt-utils \
+libmemcached11 \
+libmemcachedutil2 \
+libmemcached-dev \
 build-essential \
 git \
 curl \
@@ -31,13 +34,23 @@ openssl && \
     rm -rf /var/lib/apt/lists/* && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+# Install imagick
+#RUN apt-get update && apt-get install -y \
+#    libmagickwand-dev --no-install-recommends \
+#    && pecl install imagick \
+#	&& docker-php-ext-enable imagick
+
 # Install xdebug
 RUN pecl install xdebug && \
     docker-php-ext-enable xdebug
 
 # Install redis
-RUN pecl install redis && \
-    docker-php-ext-enable redis
+#RUN pecl install redis && \
+#    docker-php-ext-enable redis
+
+#RUN pecl install memcached
+
+#RUN echo extension=memcached.so >> /usr/local/etc/php/conf.d/memcached.ini
 
 # Other PHP7 Extensions
 
