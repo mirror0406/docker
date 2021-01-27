@@ -35,14 +35,14 @@ openssl && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install imagick
-RUN apt-get update && apt-get install -y \
-    libmagickwand-dev --no-install-recommends \
-    && pecl install imagick \
-	&& docker-php-ext-enable imagick
+#RUN apt-get update && apt-get install -y \
+#    libmagickwand-dev --no-install-recommends \
+#    && pecl install imagick \
+#	&& docker-php-ext-enable imagick
 
 # Install xdebug
-RUN pecl install xdebug-2.8.0 && \
-    docker-php-ext-enable xdebug
+#RUN pecl install xdebug-2.8.0 && \
+#    docker-php-ext-enable xdebug
 
 # Install redis
 #RUN pecl install redis && \

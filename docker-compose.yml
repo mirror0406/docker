@@ -1,10 +1,10 @@
 version: "3.0"
 services:
-    #memcached:
-    #    image: memcached:alpine
-    #    container_name: docker-memcached
-    #    ports:
-    #        - 11211:11211
+    memcached:
+        image: memcached:alpine
+        container_name: docker-memcached
+        ports:
+            - 11211:11211
 
     #redis:
     #    image: redis:alpine
