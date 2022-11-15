@@ -1,13 +1,13 @@
 FROM php:7.4-fpm
 
-ADD ./php.ini /usr/local/etc/php/conf.d/php.ini
 ADD ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
+RUN pear config-set php_ini "$PHP_INI_DIR"
 
 RUN apt-get -y update --fix-missing && \
     apt-get upgrade -y && \
     apt-get --no-install-recommends install -y apt-utils && \
     rm -rf /var/lib/apt/lists/*
-
 
 # Install useful tools and install important libaries
 RUN apt-get -y update && \
@@ -35,18 +35,29 @@ openssl && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install imagick
-#RUN apt-get update && apt-get install -y \
-#    libmagickwand-dev --no-install-recommends \
-#    && pecl install imagick \
-#	&& docker-php-ext-enable imagick
+RUN apt-get update && apt-get install -y \
+    libmagickwand-dev --no-install-recommends \
+    && pecl install imagick \
+	&& docker-php-ext-enable imagick
 
 # Install xdebug
-#RUN pecl install xdebug-2.8.0 && \
-#    docker-php-ext-enable xdebug
+RUN pecl install xdebug-2.8.0 && \
+    docker-php-ext-enable xdebug
 
 # Install redis
+RUN echo extension=redis.so >> /usr/local/etc/php/conf.d/redis.ini
+RUN echo extension=redis.so >> /usr/local/etc/php/php.ini
+
+RUN mkdir -p /usr/src/php/ext/redis; \
+	curl -fsSL https://pecl.php.net/get/redis --ipv4 | tar xvz -C "/usr/src/php/ext/redis" --strip 1; \
+	docker-php-ext-install redis;
+
+
+
 #RUN pecl install redis && \
 #    docker-php-ext-enable redis
+
+
 
 #RUN pecl install memcached
 
@@ -68,7 +79,6 @@ RUN docker-php-ext-install pdo_mysql && \
 
 RUN wget https://getcomposer.org/installer -O - -q \
     | php -- --install-dir=/bin --filename=composer --quiet
-
 
 
 WORKDIR /var/www/html
