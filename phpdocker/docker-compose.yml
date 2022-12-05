@@ -1,0 +1,104 @@
+version: "3.0"
+services:
+
+    redis:
+        image: redis:latest
+        container_name: docker-redis
+        restart: always
+        networks:
+            - backend
+          
+    redis-commander:
+        image: rediscommander/redis-commander:latest
+        container_name: docker-redis-commander
+        restart: always
+        environment:
+            - REDIS_HOSTS=local:redis:6379
+        ports:
+            - 8081:8081
+        networks:
+            - frontend
+            - backend
+
+    nginx:
+        build: ./../phpdocker/nginx
+        image: nginx:latest
+        container_name: docker-nginx
+        restart: always
+        environment:
+            VIRTUAL_HOST: localhost,admin.localhost,infoportal.localhost,api.localhost,check-parcel.localhost,check-checker.localhost,check-info.localhost,check-response.localhost,check-select.localhost,netshtrafoff.localhost,oplatidolgi.localhost,shtrafoff.localhost
+        volumes:
+            - ./../html:/var/www/html
+        depends_on:
+            - php
+        networks:
+            - frontend
+            - backend
+
+    php:
+        build: ./../phpdocker/php
+        image: php:7.4-fpm
+        container_name: docker-php
+        volumes:
+            - ./../html/:/var/www/html/
+        environment:
+            XDEBUG_CONFIG: "remote_host=host.docker.internal remote_enable=1"
+            PHP_IDE_CONFIG: "serverName=Docker"
+        depends_on:
+            - mysql
+        networks:
+            - frontend
+            - backend
+            
+    mysql:
+        image: mysql:latest
+        container_name: docker-mysql
+        restart: always
+        volumes:
+            - ./mysql/data:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+        networks:
+            - backend
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        container_name: docker-phpmyadmin
+        restart: always
+        environment:
+            VIRTUAL_HOST: phpmyadmin.local
+            PMA_HOST: mysql
+            PMA_PORT: 3306
+            PMA_USER: root
+            PMA_PASSWORD: root
+        ports:
+            - 8080:80
+        networks:
+            - frontend
+            - backend
+
+    mailtrap:
+        image: schickling/mailcatcher:latest
+        container_name: docker-mailtrap
+        ports:
+            - 1025:1025
+            - 1080:1080
+        networks:
+            - frontend
+            - backend
+
+    elasticsearch:
+        image: elasticsearch:7.11.1
+        ports:
+            - 9200:9200
+            - 9300:9300
+        environment:
+            - discovery.type=single-node
+        networks:
+            - backend
+
+networks:
+    frontend:
+        external:
+            name: proxy_proxy
+    backend:

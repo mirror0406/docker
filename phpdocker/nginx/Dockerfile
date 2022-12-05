@@ -6,6 +6,11 @@ ADD conf.d/default.conf /etc/nginx/conf.d/default.conf
 ADD conf.d/infoportal.conf /etc/nginx/conf.d/infoportal.conf
 ADD conf.d/oplatidolgi.conf /etc/nginx/conf.d/oplatidolgi.conf
 ADD conf.d/shtrafoff.conf /etc/nginx/conf.d/shtrafoff.conf
-
+ADD conf.d/netshtrafoff.conf /etc/nginx/conf.d/netshtrafoff.conf
+ADD conf.d/check-parcel.conf /etc/nginx/conf.d/check-parcel.conf
+ADD conf.d/checkservice-checker.conf /etc/nginx/conf.d/checkservice-checker.conf
+ADD conf.d/checkservice-checker.conf /etc/nginx/conf.d/checkservice-checker.conf
+ADD conf.d/checkservice-selector.conf /etc/nginx/conf.d/checkservice-selector.conf
+ADD conf.d/checkservice-response.conf /etc/nginx/conf.d/checkservice-response.conf
 
 WORKDIR /var/www/html
