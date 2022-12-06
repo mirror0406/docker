@@ -1,8 +1,5 @@
 FROM php:7.4-fpm
 
-ADD ./php.ini /usr/local/etc/php/conf.d/php.ini
-ADD ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
-
 RUN apt-get -y update --fix-missing && \
     apt-get upgrade -y && \
     apt-get --no-install-recommends install -y apt-utils && \

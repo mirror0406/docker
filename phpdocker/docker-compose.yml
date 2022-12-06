@@ -26,7 +26,7 @@ services:
         container_name: docker-nginx
         restart: always
         environment:
-            VIRTUAL_HOST: localhost,admin.localhost,infoportal.localhost,api.localhost,check-parcel.localhost,check-checker.localhost,check-info.localhost,check-response.localhost,check-select.localhost,netshtrafoff.localhost,oplatidolgi.localhost,shtrafoff.localhost
+            VIRTUAL_HOST: localhost,admin.localhost,infoportal.localhost,api.localhost,netshtrafoff.localhost,oplatidolgi.localhost,shtrafoff.localhost,check-parcel.localhost,check-checker.localhost,check-info.localhost,check-response.localhost,check-select.localhost
         volumes:
             - ./../html:/var/www/html
         depends_on:
