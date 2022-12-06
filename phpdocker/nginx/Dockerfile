@@ -9,6 +9,8 @@ ADD conf.d/shtrafoff.conf /etc/nginx/conf.d/shtrafoff.conf
 ADD conf.d/netshtrafoff.conf /etc/nginx/conf.d/netshtrafoff.conf
 ADD conf.d/checkservice.conf /etc/nginx/conf.d/checkservice.conf
 ADD conf.d/checkselector.conf /etc/nginx/conf.d/checkselector.conf
+ADD conf.d/checkresponse.conf /etc/nginx/conf.d/checkresponse.conf
+ADD conf.d/checkchecker.conf /etc/nginx/conf.d/checkchecker.conf
 ADD conf.d/resolv.conf /etc/resolv.conf
 
 
