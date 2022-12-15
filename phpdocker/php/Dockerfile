@@ -44,18 +44,8 @@ RUN apt-get update && apt-get install -y \
 RUN pecl install xdebug-2.8.0 && \
     docker-php-ext-enable xdebug
 
-# Install redis
-RUN echo extension=redis.so >> /usr/local/etc/php/conf.d/redis.ini
-RUN echo extension=redis.so >> /usr/local/etc/php/php.ini
-
-RUN mkdir -p /usr/src/php/ext/redis; \
-	curl -fsSL https://pecl.php.net/get/redis --ipv4 | tar xvz -C "/usr/src/php/ext/redis" --strip 1; \
-	docker-php-ext-install redis;
-
-
-
-#RUN pecl install redis && \
-#    docker-php-ext-enable redis
+RUN pecl install redis && \
+    docker-php-ext-enable redis
 
 
 

@@ -31,6 +31,7 @@ services:
         restart: always
         volumes:
             - ./html:/var/www/html
+            - ./phpdocker/nginx/conf.d:/etc/nginx/conf.d
         depends_on:
             - php
         ports:
@@ -43,15 +44,42 @@ services:
         image: php:7.4-fpm
         container_name: docker-php
         volumes:
-            - ./html/:/var/www/html/
+            - ./html:/var/www/html
         environment:
-            XDEBUG_CONFIG: "remote_host=host.docker.internal remote_enable=1"
+            PHP_IDE_CONFIG: "serverName=Docker"
+        links:
+            - nginx_serv:checkservice-info.localhost
+        depends_on:
+            - mysql
+        networks:
+            - internal
+
+    nginx_serv:
+        build: ./phpdocker/nginx
+        image: nginx:latest
+        container_name: docker-nginx_serv
+        restart: always
+        volumes:
+            - ./check:/var/www/html
+            - ./phpdocker/nginx/conf.d_serv:/etc/nginx/conf.d
+        depends_on:
+            - php_serv
+        networks:
+            - internal
+
+    php_serv:
+        build: ./phpdocker/php
+        image: php:7.4-fpm
+        container_name: docker-php_serv
+        volumes:
+            - ./check:/var/www/html
+        environment:
             PHP_IDE_CONFIG: "serverName=Docker"
         depends_on:
             - mysql
         networks:
             - internal
-            
+
     mysql:
         image: mysql:latest
         container_name: docker-mysql
