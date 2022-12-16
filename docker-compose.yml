@@ -1,17 +1,9 @@
 version: "3.9"
 services:
-    #memcached:
-    #    image: memcached:alpine
-    #    container_name: docker-memcached
-    #    ports:
-    #        - 11211:11211
-
     redis:
         image: redis:latest
         container_name: docker-redis
         restart: always
-        networks:
-            - internal
           
     redis-commander:
         image: rediscommander/redis-commander:latest
@@ -21,8 +13,6 @@ services:
             - REDIS_HOSTS=local:redis:6379
         ports:
             - 8081:8081
-        networks:
-            - internal
 
     nginx:
         build: ./phpdocker/nginx
@@ -36,8 +26,6 @@ services:
             - php
         ports:
             - 80:80
-        networks:
-            - internal
 
     php:
         build: ./phpdocker/php
@@ -48,24 +36,22 @@ services:
         environment:
             PHP_IDE_CONFIG: "serverName=Docker"
         links:
-            - nginx_serv:checkservice-info.localhost
+            - nginx_serv:localhost
         depends_on:
             - mysql
-        networks:
-            - internal
 
     nginx_serv:
         build: ./phpdocker/nginx
         image: nginx:latest
-        container_name: docker-nginx_serv
+        container_name: nginx_serv
         restart: always
         volumes:
             - ./check:/var/www/html
             - ./phpdocker/nginx/conf.d_serv:/etc/nginx/conf.d
         depends_on:
             - php_serv
-        networks:
-            - internal
+        ports:
+            - 8000:80
 
     php_serv:
         build: ./phpdocker/php
@@ -77,8 +63,6 @@ services:
             PHP_IDE_CONFIG: "serverName=Docker"
         depends_on:
             - mysql
-        networks:
-            - internal
 
     mysql:
         image: mysql:latest
@@ -88,8 +72,6 @@ services:
             - ./phpdocker/mysql/data:/var/lib/mysql
         environment:
             MYSQL_ROOT_PASSWORD: root
-        networks:
-            - internal
 
     phpmyadmin:
         image: phpmyadmin/phpmyadmin:latest
@@ -102,8 +84,6 @@ services:
             PMA_PASSWORD: root
         ports:
             - 8080:80
-        networks:
-            - internal
 
     mailtrap:
         image: schickling/mailcatcher:latest
@@ -111,23 +91,3 @@ services:
         ports:
             - 1025:1025
             - 1080:1080
-        networks:
-            - internal
-
-    #elasticsearch:
-        #image: library/elasticsearch:6.8.14
-        #ports:
-        #    - 9200:9200
-        #    - 9300:9300
-        #environment:
-        #    - discovery.type=single-node
-#        networks:
-#            - internal
-
-networks:
-    internal:
-        driver: bridge
-        ipam:
-            driver: default
-            config:
-               - subnet: 192.168.220.0/28
