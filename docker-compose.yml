@@ -32,33 +32,58 @@ services:
         image: php:7.4-fpm
         container_name: docker-php
         volumes:
-            - ./html:/var/www/html
+            - ./html/check:/var/www/html
         environment:
             PHP_IDE_CONFIG: "serverName=Docker"
         links:
-            - nginx_serv:localhost
+            - nginx_info:localhost
+            - nginx_resp:localhost
         depends_on:
             - mysql
 
-    nginx_serv:
+    nginx_info:
         build: ./phpdocker/nginx
         image: nginx:latest
-        container_name: nginx_serv
+        container_name: nginx_info
         restart: always
         volumes:
-            - ./check:/var/www/html
-            - ./phpdocker/nginx/conf.d_serv:/etc/nginx/conf.d
+            - ./html/service/info:/var/www/html
+            - ./phpdocker/nginx/conf.d_info:/etc/nginx/conf.d
         depends_on:
-            - php_serv
+            - php_info
         ports:
             - 8000:80
 
-    php_serv:
+    php_info:
         build: ./phpdocker/php
         image: php:7.4-fpm
-        container_name: docker-php_serv
+        container_name: php_info
         volumes:
-            - ./check:/var/www/html
+            - ./html/service/info:/var/www/html
+        environment:
+            PHP_IDE_CONFIG: "serverName=Docker"
+        depends_on:
+            - mysql
+
+    nginx_resp:
+        build: ./phpdocker/nginx
+        image: nginx:latest
+        container_name: nginx_resp
+        restart: always
+        volumes:
+            - ./html/service/resp:/var/www/html
+            - ./phpdocker/nginx/conf.d_resp:/etc/nginx/conf.d
+        depends_on:
+            - php_resp
+        ports:
+            - 8003:80
+
+    php_resp:
+        build: ./phpdocker/php
+        image: php:7.4-fpm
+        container_name: php_resp
+        volumes:
+            - ./html/service/resp:/var/www/html
         environment:
             PHP_IDE_CONFIG: "serverName=Docker"
         depends_on:

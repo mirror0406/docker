@@ -53,6 +53,9 @@ RUN pecl install redis && \
 
 #RUN echo extension=memcached.so >> /usr/local/etc/php/conf.d/memcached.ini
 
+RUN apt-get update -y
+RUN apt-get install -y iputils-ping
+
 # Other PHP7 Extensions
 
 RUN docker-php-ext-install pdo_mysql && \
