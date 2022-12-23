@@ -20,7 +20,7 @@ services:
         container_name: docker-nginx
         restart: always
         volumes:
-            - ./html:/var/www/html
+            - ./html/check:/var/www/html
             - ./phpdocker/nginx/conf.d:/etc/nginx/conf.d
         depends_on:
             - php
