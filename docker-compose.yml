@@ -30,7 +30,7 @@ services:
         container_name: docker-nginx
         restart: always
         volumes:
-            - ./html:/var/www/html
+            - ./html/check/:/var/www/html
         depends_on:
             - php
         ports:
@@ -43,7 +43,7 @@ services:
         image: php:7.4-fpm
         container_name: docker-php
         volumes:
-            - ./html/:/var/www/html/
+            - ./html/check/:/var/www/html/
         environment:
             XDEBUG_CONFIG: "remote_host=host.docker.internal remote_enable=1"
             PHP_IDE_CONFIG: "serverName=Docker"
