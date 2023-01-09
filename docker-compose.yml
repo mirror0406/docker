@@ -116,3 +116,24 @@ services:
         ports:
             - 1025:1025
             - 1080:1080
+
+    click_client:
+        image: yandex/clickhouse-client
+        entrypoint:
+            - /bin/sleep
+        command:
+            - infinity
+
+    clickhouse:
+        image: yandex/clickhouse-server
+        ports:
+            - "8123:8123"
+        volumes:
+            - ./phpdocker/dbfiles:/var/lib/clickhouse
+
+    tabix:
+        image: spoonest/clickhouse-tabix-web-client
+        ports:
+            - "8082:80"
+        depends_on:
+            - clickhouse
