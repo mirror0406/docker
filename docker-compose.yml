@@ -22,6 +22,7 @@ services:
         volumes:
             - ./html/check:/var/www/html
             - ./phpdocker/nginx/conf.d:/etc/nginx/conf.d
+            - ./phpdocker/nginx/nginx.conf:/etc/nginx/nginx.conf
         depends_on:
             - php
         ports:
@@ -137,3 +138,19 @@ services:
             - "8082:80"
         depends_on:
             - clickhouse
+
+    elasticsearch:
+        image: bitnami/elasticsearch:6.5.4
+        container_name: elasticsearch
+        ports:
+            - "9200:9200"
+            - "9300:9300"
+
+    kibana:
+        image: bitnami/kibana:6.5.4
+        container_name: kibana
+        depends_on: [ "elasticsearch" ]
+        environment:
+            ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+        ports:
+            - "5601:5601"
