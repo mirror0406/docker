@@ -140,14 +140,14 @@ services:
             - clickhouse
 
     elasticsearch:
-        image: bitnami/elasticsearch:6.5.4
+        image: bitnamilegacy/elasticsearch:6.5.4
         container_name: elasticsearch
         ports:
             - "9200:9200"
             - "9300:9300"
 
     kibana:
-        image: bitnami/kibana:6.5.4
+        image: bitnamilegacy/kibana:6.5.4
         container_name: kibana
         depends_on: [ "elasticsearch" ]
         environment:
